@@ -4,7 +4,7 @@ Controls the heating
 Very much Initial Work In Progress - first go at a mycroft skill -  doesn't do anything yet
 
 ## About
-Controls the heating via Mycroft AI, the Asante library and a Wiser Heathub
+Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and a Wiser Heathub
 
 ## Examples
 * "Turn the heat up"
