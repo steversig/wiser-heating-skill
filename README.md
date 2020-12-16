@@ -3,11 +3,11 @@ Controls the heating
 
 Very much Initial Work In Progress - first go at a mycroft skill -  may tell you the room temperatures
 
-##Installation
+## Installation
 
 mycroft-msm install https://github.com/steversig/wiser-heating-skill
 
-Then edit '__init__.py' and put in the ip address of your heathub and the key
+Then edit \_\_init\_\_.py and put in the ip address of your heathub and the key
 
 ## About
 Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and a Wiser Heathub
