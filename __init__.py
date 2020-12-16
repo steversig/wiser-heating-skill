@@ -16,6 +16,7 @@ class WiserHeatingSkill(MycroftSkill):
     def __init__(self):
         MycroftSkill.__init__(self)
         super().__init__(name="WiserHeatingSkill")
+        self.wh = None
 
     def initialize(self):
         my_setting = self.settings.get('my_setting')
@@ -24,7 +25,7 @@ class WiserHeatingSkill(MycroftSkill):
         # connect to the wiser hub
         try:
             try:
-                wh = wiserHub.wiserHub(wiserhubip,wiserkey)
+                self.wh = wiserHub.wiserHub(wiserhubip,wiserkey)
             except:
                 LOGGER.debug("Unable to connect to Wiser Hub {}".format(sys.exc_info()[1])    )
                 LOGGER.debug (' Wiser Hub IP= {}'.format(wiserip))
@@ -48,12 +49,12 @@ class WiserHeatingSkill(MycroftSkill):
     def handle_heating_wiser_getroomtemp(self, message):
         adv_room ="All"
         response = ""
-        for room in wh.getRooms():
+        for room in self.wh.getRooms():
             name = room.get("Name")
             if adv_room == "All" or name == adv_room:
-                response += "{} {} ".format(name,room.get("CalculatedTemperature")/10)
+                response += "{} {} degrees ".format(name,room.get("CalculatedTemperature")/10)
         LOGGER.info(response)
-        self.speak_dialog('heating.wiser.getroomtemp')
+        self.speak_dialog(response.replace('.', ' point '))
 
     @intent_file_handler('heating.wiser.setroomtemp.intent')
     def handle_heating_wiser_setroomtemp(self, message):
