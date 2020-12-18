@@ -14,10 +14,10 @@ this is probably going to be /opt/mycroft/skills/wiser-heating-skill.steversig
 Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and a Wiser Heathub
 
 ## Examples
-* "what's the lounge temperature"
-* "temp|temperature lounge"
-* "lounge temp|temperature"
-* "house temp"
+* "hey Mycroft what's the lounge temperature"
+* "hey Mycroft temp|temperature lounge"
+* "hey Mycroft lounge temp|temperature"
+* "hey Mycroft house temp"
 
 ## Credits
 SteveR
