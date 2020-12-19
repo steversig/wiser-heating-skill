@@ -4,7 +4,7 @@ from mycroft.util.log import getLogger
 from wiserHeatingAPI import wiserHub
 import json
 import sys
-import os
+import os.path
 
 __author__ = 'steversig'
 LOGGER = getLogger(__name__)
@@ -27,7 +27,7 @@ class WiserHeatingSkill(MycroftSkill):
             with open(fpath, 'r') as f:
                 data = f.read().split('\n')
         except FileNotFoundError as e:
-            LOGGER.debug("{}, {}".format(e.strerror, 'wiserkeys.params')    )
+            LOGGER.debug("{}, {}".format(e.strerror, fpath)    )
         else:
             wiserkey=""
             wiserip=""
@@ -71,7 +71,6 @@ class WiserHeatingSkill(MycroftSkill):
 
     @intent_file_handler('heating.wiser.getroomtemp.intent')
     def handle_heating_wiser_getroomtemp(self, message):
-        #self._setup()
         myroom = message.data["wiserroom"].lower()
         response = ""
         for room in self.wh.getRooms():
@@ -84,10 +83,19 @@ class WiserHeatingSkill(MycroftSkill):
         else:
             self.speak_dialog('heating.wiser.unknown.room', data={
                               "wiserroom": myroom})
-#            self.speak_dialog("unknown")
 
     @intent_file_handler('heating.wiser.setroomtemp.intent')
     def handle_heating_wiser_setroomtemp(self, message):
+        myroom = message.data["wiserroom"].lower()
+        temperature = float(message.data["wisertemp"])
+        response = ""
+        for room in self.wh.getRooms():
+            name = room.get("Name").lower()
+            roomId = room.get("id")
+            if myroom == "house" or name == myroom:
+                self.wh.setRoomTemperature(roomId, temperature)
+                response += "{} set to {} ".format(name,temperature)
+        LOGGER.info("wiser setroomtemp: {}".format(response))
         self.speak_dialog('heating.wiser.setroomtemp')
 
     def stop(self):
