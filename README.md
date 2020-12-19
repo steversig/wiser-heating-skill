@@ -7,13 +7,17 @@ Very much Initial Work In Progress - first go at a mycroft skill -  may tell you
 
 mycroft-msm install https://github.com/steversig/wiser-heating-skill
 
-Then edit \_\_init\_\_.py and put in the ip address of your heathub and the key
+Then copy a wiserkeys.param file into the same directory as \_\_init\_\_.py
+this is probably going to be /opt/mycroft/skills/wiser-heating-skill.steversig
 
 ## About
 Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and a Wiser Heathub
 
 ## Examples
-* "what's the room temperature"
+* "hey Mycroft what's the lounge temperature"
+* "hey Mycroft temp|temperature lounge"
+* "hey Mycroft lounge temp|temperature"
+* "hey Mycroft house temp"
 
 ## Credits
 SteveR
@@ -24,3 +28,4 @@ SteveR
 ## Tags
 #Wiser
 #Heat
+#Mycroft
