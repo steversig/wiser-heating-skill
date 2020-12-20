@@ -72,31 +72,36 @@ class WiserHeatingSkill(MycroftSkill):
     @intent_file_handler('heating.wiser.getroomtemp.intent')
     def handle_heating_wiser_getroomtemp(self, message):
         myroom = message.data["wiserroom"].lower()
-        response = ""
+        logresponse = ""
         for room in self.wh.getRooms():
             name = room.get("Name").lower()
             if myroom == "house" or name == myroom:
-                response += "{} {} degrees ".format(name,room.get("CalculatedTemperature")/10)
-        LOGGER.info("wiser getroomtemp: {}".format(response))
-        if response != "":
-            self.speak_dialog(response.replace('.', ' point '))
-        else:
-            self.speak_dialog('heating.wiser.unknown.room', data={
+                temperature = room.get("CalculatedTemperature")/10
+                self.speak_dialog('heating.wiser.temperature', 
+                    {"wiserroom": name, "wisertemp": temperature})
+                logresponse += "{} {} ".format(name,temperature)
+        LOGGER.info("getroomtemp: {} ".format(logresponse))
+        if logresponse == "":
+            self.speak_dialog('heating.wiser.unknown.room', {
                               "wiserroom": myroom})
 
     @intent_file_handler('heating.wiser.setroomtemp.intent')
     def handle_heating_wiser_setroomtemp(self, message):
         myroom = message.data["wiserroom"].lower()
-        temperature = float(message.data["wisertemp"])
-        response = ""
+        temperature = round(float(message.data["wisertemp"])*2)/2
+        logresponse = ""
         for room in self.wh.getRooms():
             name = room.get("Name").lower()
             roomId = room.get("id")
             if myroom == "house" or name == myroom:
                 self.wh.setRoomTemperature(roomId, temperature)
-                response += "{} set to {} ".format(name,temperature)
-        LOGGER.info("wiser setroomtemp: {}".format(response))
-        self.speak_dialog('heating.wiser.setroomtemp')
+                self.speak_dialog('heating.wiser.temperature', 
+                    {"wiserroom": name, "wisertemp": temperature})
+                logresponse += "{} => {} ".format(name,temperature)
+        LOGGER.info("setroomtemp: {}".format(logresponse))
+        if logresponse == "":
+            self.speak_dialog('heating.wiser.unknown.room', {
+                              "wiserroom": myroom})
 
     def stop(self):
         pass

@@ -1,1 +1,2 @@
-Heat the {wiserroom} to {wisertemp}
+Heat (the|) {wiserroom} to {wisertemp}
+{wiserroom} Heat {wisertemp}
