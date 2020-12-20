@@ -1,2 +1,2 @@
-Heat (the|) {wiserroom} to {wisertemp}
-{wiserroom} Heat {wisertemp}
+Heat (the|) {wiserroom} (to|2) {wisertemp}
+{wiserroom} Heat (to|2) {wisertemp}

@@ -59,7 +59,23 @@ class WiserHeatingSkill(MycroftSkill):
 
     @intent_file_handler('heating.wiser.advance.intent')
     def handle_heating_wiser_advance(self, message):
-        self.speak_dialog('heating.wiser.advance')
+        myroom = message.data["wiserroom"].lower()
+        logresponse = ""
+        if self.wh != 'NoneType':
+            for room in self.wh.getRooms():
+                name = room.get("Name").lower()
+                roomId = room.get("id")
+                if myroom == "house" or name == myroom:
+                    self.wh.setRoomScheduleAdvance(roomId)
+                    self.speak_dialog('heating.wiser.advance', 
+                        {"wiserroom": name})
+                    logresponse += "{} ".format(name)
+            LOGGER.info("Advance: {} ".format(logresponse))
+            if logresponse == "":
+                self.speak_dialog('heating.wiser.unknown.room', {
+                                  "wiserroom": myroom})
+        else:
+            self.speak_dialog('heating.wiser.lostcomms')
 
     @intent_file_handler('heating.wiser.awaymode.intent')
     def handle_heating_wiser_awaymode(self, message):
@@ -73,35 +89,61 @@ class WiserHeatingSkill(MycroftSkill):
     def handle_heating_wiser_getroomtemp(self, message):
         myroom = message.data["wiserroom"].lower()
         logresponse = ""
-        for room in self.wh.getRooms():
-            name = room.get("Name").lower()
-            if myroom == "house" or name == myroom:
-                temperature = room.get("CalculatedTemperature")/10
-                self.speak_dialog('heating.wiser.temperature', 
-                    {"wiserroom": name, "wisertemp": temperature})
-                logresponse += "{} {} ".format(name,temperature)
-        LOGGER.info("getroomtemp: {} ".format(logresponse))
-        if logresponse == "":
-            self.speak_dialog('heating.wiser.unknown.room', {
-                              "wiserroom": myroom})
+        if self.wh != 'NoneType':
+            for room in self.wh.getRooms():
+                name = room.get("Name").lower()
+                if myroom == "house" or name == myroom:
+                    temperature = room.get("CalculatedTemperature")/10
+                    self.speak_dialog('heating.wiser.temperature', 
+                        {"wiserroom": name, "wisertemp": temperature})
+                    logresponse += "{} {} ".format(name,temperature)
+            LOGGER.info("getroomtemp: {} ".format(logresponse))
+            if logresponse == "":
+                self.speak_dialog('heating.wiser.unknown.room', {
+                                  "wiserroom": myroom})
+        else:
+            self.speak_dialog('heating.wiser.lostcomms')
+
+    @intent_file_handler('heating.wiser.reset.intent')
+    def handle_heating_wiser_reset(self, message):
+        myroom = message.data["wiserroom"].lower()
+        logresponse = ""
+        if self.wh != 'NoneType':
+            for room in self.wh.getRooms():
+                name = room.get("Name").lower()
+                roomId = room.get("id")
+                if myroom == "house" or name == myroom:
+                    self.wh.setRoomScheduleAdvanceUndo(roomId)
+                    self.speak_dialog('heating.wiser.reset', 
+                        {"wiserroom": name})
+                    logresponse += "{} ".format(name)
+            LOGGER.info("Reset: {} ".format(logresponse))
+            if logresponse == "":
+                self.speak_dialog('heating.wiser.unknown.room', {
+                                  "wiserroom": myroom})
+        else:
+            self.speak_dialog('heating.wiser.lostcomms')
 
     @intent_file_handler('heating.wiser.setroomtemp.intent')
     def handle_heating_wiser_setroomtemp(self, message):
         myroom = message.data["wiserroom"].lower()
         temperature = round(float(message.data["wisertemp"])*2)/2
         logresponse = ""
-        for room in self.wh.getRooms():
-            name = room.get("Name").lower()
-            roomId = room.get("id")
-            if myroom == "house" or name == myroom:
-                self.wh.setRoomTemperature(roomId, temperature)
-                self.speak_dialog('heating.wiser.temperature', 
-                    {"wiserroom": name, "wisertemp": temperature})
-                logresponse += "{} => {} ".format(name,temperature)
-        LOGGER.info("setroomtemp: {}".format(logresponse))
-        if logresponse == "":
-            self.speak_dialog('heating.wiser.unknown.room', {
-                              "wiserroom": myroom})
+        if self.wh != 'NoneType':
+            for room in self.wh.getRooms():
+                name = room.get("Name").lower()
+                roomId = room.get("id")
+                if myroom == "house" or name == myroom:
+                    self.wh.setRoomTemperature(roomId, temperature)
+                    self.speak_dialog('heating.wiser.temperature', 
+                        {"wiserroom": name, "wisertemp": temperature})
+                    logresponse += "{} => {} ".format(name,temperature)
+            LOGGER.info("setroomtemp: {}".format(logresponse))
+            if logresponse == "":
+                self.speak_dialog('heating.wiser.unknown.room', {
+                                  "wiserroom": myroom})
+        else:
+            self.speak_dialog('heating.wiser.lostcomms')
 
     def stop(self):
         pass
