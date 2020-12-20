@@ -1,7 +1,10 @@
 # <img src="https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/thermometer-half.svg" card_color="#D81159" width="50" height="50" style="vertical-align:bottom"/> Wiser Heating
 Controls the heating
 
-Very much Initial Work In Progress - first go at a mycroft skill -  may tell you the room temperatures
+Very much Initial Work In Progress - first go at a mycroft skill
+So far does
+* getrromtemp
+* setroomtemp
 
 ## Installation
 
@@ -18,6 +21,8 @@ Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and
 * "hey Mycroft temp|temperature lounge"
 * "hey Mycroft lounge temp|temperature"
 * "hey Mycroft house temp"
+* "hey Mycroft heat lounge to 21"
+* "hey Mycroft lounge heat 21"
 
 ## Credits
 SteveR
