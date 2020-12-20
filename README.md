@@ -2,6 +2,7 @@
 Controls the heating
 
 Very much Initial Work In Progress - first go at a mycroft skill
+
 So far does
 * getrromtemp
 * setroomtemp
