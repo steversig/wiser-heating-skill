@@ -9,7 +9,7 @@ So far uses wiserheatingapi API calls
 * setRoomScheduleAdvance
 * setRoomScheduleAdvanceUndo
 
-to do
+To do
 * setHomeAwayMode
 * setRoomMode (Boost support)
 
