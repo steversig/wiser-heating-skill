@@ -83,7 +83,50 @@ class WiserHeatingSkill(MycroftSkill):
 
     @intent_file_handler('heating.wiser.boost.intent')
     def handle_heating_wiser_boost(self, message):
-        self.speak_dialog('heating.wiser.boost')
+        LOGGER.info(message.data)
+        myroom = message.data["wiserroom"].lower()
+        myparams = ""
+        try:
+            mytemp = message.data["wisertemp"]
+        except KeyError:
+            mytemp = 2
+        else:
+            mytemp = round(float(mytemp)*2)/2
+        myparams += ",boost_temp={}".format(str(mytemp))
+        try:
+            mytime = float(message.data['wisertime'])
+        except KeyError:
+            mytime = 30
+        myparams += ",boost_temp_time={}".format(str(mytime))
+
+        logresponse = ""
+        try:
+            self.wh.getRooms()
+        except AttributeError:
+             self.speak_dialog('heating.wiser.lostcomms')		
+        else:
+            for room in self.wh.getRooms():
+                name = room.get("Name").lower()
+                roomId = room.get("id")
+                if myroom == "house" or name == myroom:
+                    response = "{},boost{}".format(roomId,str(myparams))
+                    if mytemp == 2:
+                        dtemp = str(float(room.get("CalculatedTemperature")/10 +2))
+                        response = response.replace('boost_temp=2','boost_temp='+dtemp)
+                        settemp = dtemp
+                    else:
+                        settemp = mytemp
+                    LOGGER.info(response)
+                    #self.wh.setRoomMode(response)
+                    self.speak_dialog('heating.wiser.boost', 
+                        {"wiserroom": name, "wisertemp": settemp, "wisertime": int(mytime)})
+                    logresponse += "{} ".format(name)
+            logresponse += myparams
+            logresponse = logresponse.replace('boost_temp=2','boost_temp=+2')
+            LOGGER.info("boost: {}".format(logresponse))
+            if logresponse == "":
+                self.speak_dialog('heating.wiser.unknown.room', {
+                                  "wiserroom": myroom})
 
     @intent_file_handler('heating.wiser.getroomtemp.intent')
     def handle_heating_wiser_getroomtemp(self, message):
