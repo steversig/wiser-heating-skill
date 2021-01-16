@@ -9,7 +9,7 @@ So far uses wiserheatingapi API calls
 * setRoomScheduleAdvance
 * setRoomScheduleAdvanceUndo
 
-To do
+In progress (API call commented out but parameters collected and formatted)
 * setHomeAwayMode
 * setRoomMode (Boost support)
 
@@ -28,11 +28,14 @@ Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and
 * "hey Mycroft temp|temperature lounge"
 * "hey Mycroft lounge temp|temperature"
 * "hey Mycroft house temp|temperature"
-* "hey Mycroft heat lounge to 21" - parsing issues
+* "hey Mycroft heat lounge to 21"
 * "hey Mycroft lounge heat 21"
 * "hey Mycroft advance heat|heating lounge"
 * "hey Mycroft advance heat|heating house"
 * "hey Mycroft reset heat|heating lounge"
+* "hey Mycroft set away mode"
+* "hey Mycroft set away mode to 7"
+* "hey Mycroft I'm home"
 
 ## Credits
 SteveR
