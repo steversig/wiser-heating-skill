@@ -17,8 +17,11 @@ In progress (API call commented out but parameters collected and formatted)
 
 mycroft-msm install https://github.com/steversig/wiser-heating-skill
 
-Then copy a wiserkeys.param file into the same directory as \_\_init\_\_.py
-this is probably going to be /opt/mycroft/skills/wiser-heating-skill.steversig
+## Configuration
+* Either copy a wiserkeys.param file into the same directory as \_\_init\_\_.py
+This is probably going to be /opt/mycroft/skills/wiser-heating-skill.steversig
+* Or Log in to https://account.mycroft.ai and select Skills from the right hand top Personal menu.
+Then click on the configure icon on the Wiser Heating app, fill in the Wiser Hub IP and key, then Save 
 
 ## About
 Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and a Wiser Heathub
@@ -39,6 +42,11 @@ Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and
 
 ## Credits
 SteveR
+
+## Thanks
+Asantaga https://github.com/asantaga/wiserheatingapi for wiserheating api
+
+Steve Ovens https://opensource.com/users/stratusss for several articles about Mycroft that helped me to make this work better
 
 ## Category
 **IoT**
