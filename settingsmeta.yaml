@@ -7,9 +7,9 @@ skillMetadata:
           label: "Provide your Wiser Hub IP address and key"
         - name: wiserhubip
           type: text
-          label: IP Address
+          label: Wiser Hub IP Address
           value: ""
         - name: wiserkey
           type: password
-          label: Wiser key
+          label: Wiser Hub key
           value: ""
