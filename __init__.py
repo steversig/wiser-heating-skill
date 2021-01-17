@@ -117,12 +117,12 @@ class WiserHeatingSkill(MycroftSkill):
             mytemp = 2
         else:
             mytemp = round(float(mytemp)*2)/2
-        myparams += ",boost_temp={}".format(str(mytemp))
+        myparams += ",{} deg ".format(str(mytemp))
         try:
-            mytime = float(message.data['wisertime'])
+            mytime = int(message.data['wisertime'])
         except KeyError:
             mytime = 30
-        myparams += ",boost_temp_time={}".format(str(mytime))
+        myparams += ",{} mins ".format(str(mytime))
 
         logresponse = ""
         try:
@@ -134,20 +134,18 @@ class WiserHeatingSkill(MycroftSkill):
                 name = room.get("Name").lower()
                 roomId = room.get("id")
                 if myroom == "house" or name == myroom:
-                    response = "{},boost{}".format(roomId,str(myparams))
                     if mytemp == 2:
-                        dtemp = str(float(room.get("CalculatedTemperature")/10 +2))
-                        response = response.replace('boost_temp=2','boost_temp='+dtemp)
+                        dtemp = float(room.get("CalculatedTemperature")/10 +2)
                         settemp = dtemp
                     else:
                         settemp = mytemp
-                    LOGGER.info(response)
-                    #self.wh.setRoomMode(response)
+                    LOGGER.info("{} boost {} {}".format(roomId,settemp,mytime))
+                    self.wh.setRoomMode(roomId,"boost",settemp,mytime)
                     self.speak_dialog('heating.wiser.boost', 
                         {"wiserroom": name, "wisertemp": settemp, "wisertime": int(mytime)})
                     logresponse += "{} ".format(name)
             logresponse += myparams
-            logresponse = logresponse.replace('boost_temp=2','boost_temp=+2')
+            logresponse = logresponse.replace('2 deg','+2 deg')
             LOGGER.info("boost: {}".format(logresponse))
             if logresponse == "":
                 self.speak_dialog('heating.wiser.unknown.room', {
