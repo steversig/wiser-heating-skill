@@ -4,10 +4,6 @@ skillMetadata:
     - name: Wiser Hub Details
       fields:
         - type: label
-          label: 
-    - name: Login << Name of another section
-      fields:
-        - type: label
           label: "Provide your Wiser Hub IP address and key"
         - name: wiserhubip
           type: text
