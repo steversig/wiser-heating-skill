@@ -1,22 +1,19 @@
 
 skillMetadata:
   sections:
-    - name: Options << Name of section
+    - name: Wiser Hub Details
       fields:
-        - name: internal_python_variable_name
-          type: text
-          label: Setting Friendly Display Name
-          value: ""
-          placeholder: demo prompt in the input box
+        - type: label
+          label: 
     - name: Login << Name of another section
       fields:
         - type: label
-          label: Just a little bit of extra info for the user to understand following settings
-        - name: username
+          label: "Provide your Wiser Hub IP address and key"
+        - name: wiserhubip
           type: text
-          label: Username
+          label: IP Address
           value: ""
-        - name: password
+        - name: wiserkey
           type: password
-          label: Password
+          label: Wiser key
           value: ""
