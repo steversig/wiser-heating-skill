@@ -2,6 +2,7 @@
 Controls the heating
 
 Work In Progress - first go at a Mycroft skill
+
 Uses Padatious intents, so commands need to include all settings in one go
 
 So far uses wiserheatingapi API calls
