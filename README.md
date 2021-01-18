@@ -1,7 +1,8 @@
 # <img src="https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/thermometer-half.svg" card_color="#D81159" width="50" height="50" style="vertical-align:bottom"/> Wiser Heating
 Controls the heating
 
-Very much Initial Work In Progress - first go at a mycroft skill
+Work In Progress - first go at a Mycroft skill
+Uses Padatious intents, so commands need to include all settings in one go
 
 So far uses wiserheatingapi API calls
 * room.get("CalculatedTemperature")
@@ -9,8 +10,6 @@ So far uses wiserheatingapi API calls
 * setRoomScheduleAdvance
 * setRoomScheduleAdvanceUndo
 * setRoomMode (Boost support)
-
-In progress (API call commented out but parameters collected and formatted)
 * setHomeAwayMode
 
 ## Installation
@@ -36,12 +35,12 @@ Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and
 * "hey Mycroft advance heat|heating lounge"
 * "hey Mycroft advance heat|heating house"
 * "hey Mycroft reset heat|heating lounge"
-* "hey Mycroft boost lounge" will add 2 degress for 30 mins
-* "hey Mycroft boost lounge to 21" will boost to 21 degrees for 30 mins
-* "hey Mycroft boost lounge to 21 for 20" will boost to 21 degrees for 20 mins
-* "hey Mycroft set away mode"
-* "hey Mycroft set away mode to 7"
-* "hey Mycroft I'm home"
+* "hey Mycroft boost lounge" - will add 2 degress for 30 mins
+* "hey Mycroft boost lounge to 21" - will boost to 21 degrees for 30 mins
+* "hey Mycroft boost lounge to 21 for 20" - will boost to 21 degrees for 20 mins
+* "hey Mycroft set away mode" - sets away mode on and a default temperature of 7 degrees
+* "hey Mycroft set away mode to 8" - sets away mode on and a temperature of 8 degrees
+* "hey Mycroft I'm home" - clears away mode
 
 ## Credits
 SteveR
