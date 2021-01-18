@@ -84,12 +84,12 @@ class WiserHeatingSkill(MycroftSkill):
         LOGGER.info("awaymode away: {}".format(message.data))
         try:
             if message.data.get('wisertemp') != None:
-                temperature = "temperature=" + message.data["wisertemp"]
+                temperature = round(float(message.data["wisertemp"])*2)/2 
                 LOGGER.info("awaymode: away at {}".format(message.data["wisertemp"]))
-                #self.wh.setHomeAwayMode("AWAY",temperature)
+                self.wh.setHomeAwayMode("AWAY",int(temperature))
             else:
-                LOGGER.info("awaymode: away at {}".format("7"))
-                #self.wh.setHomeAwayMode("AWAY","temperature=7")
+                LOGGER.info("awaymode: away at 7")
+                self.wh.setHomeAwayMode("AWAY",7)
         except AttributeError:
             self.speak_dialog('heating.wiser.lostcomms')
         else:
@@ -100,7 +100,7 @@ class WiserHeatingSkill(MycroftSkill):
         LOGGER.info("awaymode home: {}".format(message.data))
         try:
             LOGGER.info("awaymode set to home")
-            #self.wh.setHomeAwayMode("HOME")
+            self.wh.setHomeAwayMode("HOME")
         except AttributeError:
             self.speak_dialog('heating.wiser.lostcomms')
         else:
