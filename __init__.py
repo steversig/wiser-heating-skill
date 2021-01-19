@@ -1,5 +1,6 @@
 from mycroft import MycroftSkill, intent_file_handler
 from mycroft.util.log import getLogger
+from mycroft.util.parse import match_one
 
 from wiserHeatingAPI import wiserHub
 import json
@@ -56,6 +57,27 @@ class WiserHeatingSkill(MycroftSkill):
 
     def initialize(self):
         self._setup()
+
+    def match_room(self, myroom):
+        #LOGGER.info("Match room looking for : {}".format(myroom))
+        confidence = 0
+        rooms = ['house']
+        match = myroom
+        try:
+            self.wh.getRooms()
+        except AttributeError:
+            self.speak_dialog('heating.wiser.lostcomms')		
+        else:
+            for room in self.wh.getRooms():
+                name = room.get("Name").lower()
+                rooms.append(name)
+            #LOGGER.info(rooms)
+            match, confidence = match_one(myroom, list(rooms))
+            LOGGER.info("Match room: {} => {} @{:.4f}".format(myroom, match, confidence))
+        if confidence > 0.5:
+            return match
+        else:
+            return myroom
 
     @intent_file_handler('heating.wiser.advance.intent')
     def handle_heating_wiser_advance(self, message):
@@ -154,6 +176,7 @@ class WiserHeatingSkill(MycroftSkill):
     @intent_file_handler('heating.wiser.getroomtemp.intent')
     def handle_heating_wiser_getroomtemp(self, message):
         myroom = message.data["wiserroom"].lower()
+        myroom = self.match_room(myroom) # get the nearest matching room
         logresponse = ""
         try:
             self.wh.getRooms()
@@ -167,11 +190,12 @@ class WiserHeatingSkill(MycroftSkill):
                     self.speak_dialog('heating.wiser.temperature', 
                         {"wiserroom": name, "wisertemp": temperature})
                     logresponse += "{} {} ".format(name,temperature)
-            LOGGER.info("getroomtemp: {} ".format(logresponse))
             if logresponse == "":
-                LOGGER.info("unknown room -{}-".format(myroom))
+                LOGGER.info("getroomtemp: unknown room -{}-".format(myroom))
                 self.speak_dialog('heating.wiser.unknown.room', {
                                   "wiserroom": myroom})
+            else:
+                LOGGER.info("getroomtemp: {} ".format(logresponse))
 
     @intent_file_handler('heating.wiser.reset.intent')
     def handle_heating_wiser_reset(self, message):
