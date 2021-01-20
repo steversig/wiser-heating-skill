@@ -1,6 +1,8 @@
 from mycroft import MycroftSkill, intent_file_handler
 from mycroft.util.log import getLogger
 from mycroft.util.parse import match_one
+from mycroft.util.parse import extract_number
+from mycroft.util.format import pronounce_number
 
 from wiserHeatingAPI import wiserHub
 import json
@@ -58,24 +60,28 @@ class WiserHeatingSkill(MycroftSkill):
     def initialize(self):
         self._setup()
 
-    def match_room(self, myroom):
-        #LOGGER.info("Match room looking for : {}".format(myroom))
+    def match_room(self, myroom, wiserrooms):
         confidence = 0
+        pronounce_to_name = {'house':'house'}
         rooms = ['house']
         match = myroom
-        try:
-            self.wh.getRooms()
-        except AttributeError:
-            self.speak_dialog('heating.wiser.lostcomms')		
-        else:
-            for room in self.wh.getRooms():
-                name = room.get("Name").lower()
-                rooms.append(name)
-            #LOGGER.info(rooms)
-            match, confidence = match_one(myroom, list(rooms))
-            LOGGER.info("Match room: {} => {} @{:.4f}".format(myroom, match, confidence))
-        if confidence > 0.5:
-            return match
+        for room in wiserrooms:
+            name = room.get("Name").lower()
+            ex_number = extract_number(name, short_scale=True, ordinals=False, lang=None)
+            if ex_number != False:
+                n_number = pronounce_number(ex_number, lang=None, places=2)
+                name_num = name.replace(str(ex_number),n_number)
+                #LOGGER.info("{} => {} => {}".format(ex_number, n_number, name_num))
+                pronounce_to_name[name_num] = name
+            else:
+                pronounce_to_name[name] = name
+                name_num = name
+            rooms.append(name_num)
+        #LOGGER.info(pronounce_to_name)
+        match, confidence = match_one(myroom, list(rooms))
+        LOGGER.info("Match room: ({} <=> {}) @{:.4f} => {}".format(myroom, match, confidence, pronounce_to_name[match]))
+        if confidence >= 0.8:
+            return pronounce_to_name[match]
         else:
             return myroom
 
@@ -176,14 +182,15 @@ class WiserHeatingSkill(MycroftSkill):
     @intent_file_handler('heating.wiser.getroomtemp.intent')
     def handle_heating_wiser_getroomtemp(self, message):
         myroom = message.data["wiserroom"].lower()
-        myroom = self.match_room(myroom) # get the nearest matching room
         logresponse = ""
         try:
-            self.wh.getRooms()
+            wiserrooms = self.wh.getRooms()
         except AttributeError:
-            self.speak_dialog('heating.wiser.lostcomms')		
+            self.speak_dialog('heating.wiser.lostcomms')
+            self._setup()			
         else:
-            for room in self.wh.getRooms():
+            myroom = self.match_room(myroom, wiserrooms) # get the nearest matching room
+            for room in wiserrooms:
                 name = room.get("Name").lower()
                 if myroom == "house" or name == myroom:
                     temperature = room.get("CalculatedTemperature")/10
@@ -191,7 +198,7 @@ class WiserHeatingSkill(MycroftSkill):
                         {"wiserroom": name, "wisertemp": temperature})
                     logresponse += "{} {} ".format(name,temperature)
             if logresponse == "":
-                LOGGER.info("getroomtemp: unknown room -{}-".format(myroom))
+                LOGGER.info("getroomtemp: unknown room _{}_".format(myroom))
                 self.speak_dialog('heating.wiser.unknown.room', {
                                   "wiserroom": myroom})
             else:
