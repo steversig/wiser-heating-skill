@@ -60,30 +60,30 @@ class WiserHeatingSkill(MycroftSkill):
     def initialize(self):
         self._setup()
 
-    def match_room(self, myroom, wiserrooms):
-        confidence = 0
-        pronounce_to_name = {'house':'house'}
+    def match_room(self, my_room, wiserrooms):
         rooms = ['house']
-        match = myroom
+        pronounce_to_name = {'house':'house'}
         for room in wiserrooms:
             name = room.get("Name").lower()
+            rooms.append(name)
             ex_number = extract_number(name, short_scale=True, ordinals=False, lang=None)
             if ex_number != False:
                 n_number = pronounce_number(ex_number, lang=None, places=2)
                 name_num = name.replace(str(ex_number),n_number)
                 #LOGGER.info("{} => {} => {}".format(ex_number, n_number, name_num))
                 pronounce_to_name[name_num] = name
+                pronounce_to_name[name] = name
+                rooms.append(name_num)
             else:
                 pronounce_to_name[name] = name
-                name_num = name
-            rooms.append(name_num)
         #LOGGER.info(pronounce_to_name)
-        match, confidence = match_one(myroom, list(rooms))
-        LOGGER.info("Match room: ({} <=> {}) @{:.4f} => {}".format(myroom, match, confidence, pronounce_to_name[match]))
-        if confidence >= 0.8:
+        #LOGGER.info(rooms)
+        match, confidence = match_one(my_room, list(rooms))
+        LOGGER.info("Match room: ({} <=> {}) @{:.4f} => {}".format(my_room, match, confidence, pronounce_to_name[match]))
+        if confidence > 0.5:
             return pronounce_to_name[match]
         else:
-            return myroom
+            return my_room
 
     @intent_file_handler('heating.wiser.advance.intent')
     def handle_heating_wiser_advance(self, message):
