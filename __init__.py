@@ -177,7 +177,7 @@ class WiserHeatingSkill(MycroftSkill):
                     #LOGGER.info("boost: id:{} {} {}".format(roomId,settemp,mytime))
                     try:
                         pass
-                        #self.wh.setRoomMode(roomId,"boost",settemp,mytime)
+                        self.wh.setRoomMode(roomId,"boost",settemp,mytime)
                     except AttributeError:
                         self.speak_dialog('heating.wiser.lostcomms')		
                         self._setup()			
