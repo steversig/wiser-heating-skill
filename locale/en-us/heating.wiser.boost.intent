@@ -1,5 +1,4 @@
-Boost (the|) (heat|heating|) (in the|in|) {wiserroom} for {wisertime}
-Boost (the|) (heat|heating|) (in the|in|) {wiserroom} for {wisertime} to {wisertemp}
-Boost (the|) (heat|heating|) (in the|in|) {wiserroom} to {wisertemp}
-Boost (the|) (heat|heating|) (in the|in|) {wiserroom} to {wisertemp} for {wisertime}
-Boost (the|) (heat|heating|) (in the|in|) {wiserroom}
+{wiserroom} (Boost|heat|heating) (|to {wisertemp}) (|for {wisertime})
+{wiserroom} (Boost|heat|heating) (|for {wisertime}) (|to {wisertemp}) 
+(Boost|heat|heating) {wiserroom} (|to {wisertemp}) (|for {wisertime})
+(Boost|heat|heating) {wiserroom} (|for {wisertime}) (|to {wisertemp})

@@ -1,1 +1,2 @@
-(away mode|Set away mode) (on|to {wisertemp}|2 {wisertemp})
+Set (away mode|awaymode) (on|to|2 {wisertemp})
+(away mode|awaymode) (on|to {wisertemp}|2 {wisertemp})
