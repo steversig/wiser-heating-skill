@@ -13,7 +13,9 @@ skillMetadata:
           type: password
           label: Wiser Hub key
           value: ""
+        - type: label
+          label: "Provide your Virtual room name that applies commands to all rooms"
         - name: wiserhousename
           type: text
-          label: "house name - Virtual room name that applies commands to all rooms"
+          label: "house name"
           value: "house"
