@@ -46,6 +46,10 @@ class WiserHeatingSkill(MycroftSkill):
             wiserkey = self.settings.get('wiserkey')
         if self.settings.get('wiserhubip') is not None:
             wiserhubip = self.settings.get('wiserhubip')
+        if self.settings.get('wiserhousename') is not None:
+            self.my_house = self.settings.get('wiserhousename')
+        else:
+            self.my_house = "house"
         # connect to the wiser hub
         try:
             try:
@@ -60,20 +64,20 @@ class WiserHeatingSkill(MycroftSkill):
     def initialize(self):
         self._setup()
 
-    def match_room(self, my_room, wiserrooms): # Nudge room name towards best match of room in Wiser Hub
+    def match_room(self, my_room, wiserrooms): # Nudge room name towards best match of room from Wiser Hub
         rooms = ['house']
         pronounce_to_name = {'house':'house'}
         for room in wiserrooms:
             name = room.get("Name").lower()
             rooms.append(name)
+            pronounce_to_name[name] = name
             ex_number = extract_number(name, short_scale=True, ordinals=False, lang=None)
             if ex_number != False: # add alternative with one set of spelled out numbers
                 n_number = pronounce_number(ex_number, lang=None, places=2)
                 name_num = name.replace(str(ex_number),n_number)
                 #LOGGER.info("{} => {} => {}".format(ex_number, n_number, name_num))
-                pronounce_to_name[name_num] = name
                 rooms.append(name_num)
-            pronounce_to_name[name] = name
+                pronounce_to_name[name_num] = name
         #LOGGER.info(pronounce_to_name)
         #LOGGER.info(rooms)
         match, confidence = match_one(my_room, list(rooms))
@@ -96,7 +100,7 @@ class WiserHeatingSkill(MycroftSkill):
             for room in wiserrooms:
                 name = room.get("Name").lower()
                 roomId = room.get("id")
-                if my_room == "house" or name == my_room:
+                if my_room == self.my_house or name == my_room:
                     try:
                         self.wh.setRoomScheduleAdvance(roomId)
                     except AttributeError:
@@ -119,8 +123,8 @@ class WiserHeatingSkill(MycroftSkill):
             temperature = round(float(message.data["wisertemp"])*2)/2 
         try:
             self.wh.setHomeAwayMode("AWAY",int(temperature))
-        except ValueError:
-            LOGGER.info("awaymode: temp invalid {}".format(temperature))
+        except ValueError as e:
+            LOGGER.error("awaymode away: {}".format(e))
         except:
             self.speak_dialog('heating.wiser.lostcomms')
             self._setup()			
@@ -134,6 +138,8 @@ class WiserHeatingSkill(MycroftSkill):
         LOGGER.info("awaymode home: {}".format(message.data))
         try:
             self.wh.setHomeAwayMode("HOME")
+        except ValueError as e:
+            LOGGER.error("awaymode home: {}".format(e))
         except AttributeError:
             self.speak_dialog('heating.wiser.lostcomms')
             self._setup()			
@@ -168,7 +174,7 @@ class WiserHeatingSkill(MycroftSkill):
             for room in wiserrooms:
                 name = room.get("Name").lower()
                 roomId = room.get("id")
-                if my_room == "house" or name == my_room:
+                if my_room == self.my_house or name == my_room:
                     if mytemp == 2:
                         dtemp = float(room.get("CalculatedTemperature")/10 +2)
                         settemp = dtemp
@@ -176,10 +182,11 @@ class WiserHeatingSkill(MycroftSkill):
                         settemp = mytemp
                     #LOGGER.info("boost: id:{} {} {}".format(roomId,settemp,mytime))
                     try:
-                        pass
                         self.wh.setRoomMode(roomId,"boost",settemp,mytime)
+                    except ValueError as e:
+                        LOGGER.error("boost: {}".format(e))
                     except AttributeError:
-                        self.speak_dialog('heating.wiser.lostcomms')		
+                        self.speak_dialog('heating.wiser.lostcomms')
                         self._setup()			
                     else:
                         self.speak_dialog('heating.wiser.boost', 
@@ -205,7 +212,7 @@ class WiserHeatingSkill(MycroftSkill):
             my_room = self.match_room(my_room, wiserrooms) # get the nearest matching room
             for room in wiserrooms:
                 name = room.get("Name").lower()
-                if my_room == "house" or name == my_room:
+                if my_room == self.my_house or name == my_room:
                     temperature = room.get("CalculatedTemperature")/10
                     self.speak_dialog('heating.wiser.temperature', 
                         {"wiserroom": name, "wisertemp": temperature})
@@ -231,7 +238,7 @@ class WiserHeatingSkill(MycroftSkill):
             for room in wiserrooms:
                 name = room.get("Name").lower()
                 roomId = room.get("id")
-                if my_room == "house" or name == my_room:
+                if my_room == self.my_house or name == my_room:
                     try:
                         self.wh.setRoomScheduleAdvanceUndo(roomId)
                     except AttributeError:
@@ -262,9 +269,13 @@ class WiserHeatingSkill(MycroftSkill):
                 for room in wiserrooms:
                     name = room.get("Name").lower()
                     roomId = room.get("id")
-                    if my_room == "house" or name == my_room:
+                    if my_room == self.my_house or name == my_room:
                         try:
                             self.wh.setRoomTemperature(roomId, temperature)
+                        except ValueError as e:
+                            LOGGER.error("setroomtemp: {}".format(e))
+                        except WiserRESTException as e:
+                            LOGGER.error("setroomtemp: {}".format(e))
                         except AttributeError:
                             self.speak_dialog('heating.wiser.lostcomms')		
                             self._setup()			
