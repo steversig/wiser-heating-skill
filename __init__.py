@@ -3,6 +3,7 @@ from mycroft.util.log import getLogger
 from mycroft.util.parse import match_one
 from mycroft.util.parse import extract_number
 from mycroft.util.format import pronounce_number
+from mycroft.util.format import nice_number
 
 from wiserHeatingAPI import wiserHub
 import json
@@ -95,6 +96,7 @@ class WiserHeatingSkill(MycroftSkill):
             wiserrooms = self.wh.getRooms()
         except AttributeError:
             self.speak_dialog('heating.wiser.lostcomms')		
+            self._setup()			
         else:
             my_room = self.match_room(my_room, wiserrooms) # get the nearest matching room
             for room in wiserrooms:
@@ -166,10 +168,13 @@ class WiserHeatingSkill(MycroftSkill):
 
         logresponse = ""
         try:
-            wiserrooms = self.wh.getRooms()
-        except AttributeError:
-             self.speak_dialog('heating.wiser.lostcomms')		
+            self.wh.refreshData()
+        except ValueError as e:
+            LOGGER.error(e)
+            self.speak_dialog('heating.wiser.lostcomms')		
+            self._setup()			
         else:
+            wiserrooms = self.wh.getRooms()
             my_room = self.match_room(my_room, wiserrooms) # get the nearest matching room
             for room in wiserrooms:
                 name = room.get("Name").lower()
@@ -182,15 +187,17 @@ class WiserHeatingSkill(MycroftSkill):
                         settemp = mytemp
                     #LOGGER.info("boost: id:{} {} {}".format(roomId,settemp,mytime))
                     try:
-                        self.wh.setRoomMode(roomId,"boost",settemp,mytime)
+                        #self.wh.setRoomMode(roomId,"boost",settemp,mytime)
+                        pass
                     except ValueError as e:
                         LOGGER.error("boost: {}".format(e))
                     except AttributeError:
                         self.speak_dialog('heating.wiser.lostcomms')
                         self._setup()			
                     else:
+                        nice_settemp = nice_number(settemp, lang=None, speech=True, denominators=None)
                         self.speak_dialog('heating.wiser.boost', 
-                            {"wiserroom": name, "wisertemp": settemp, "wisertime": int(mytime)})
+                            {"wiserroom": name, "wisertemp": nice_settemp, "wisertime": int(mytime)})
                         logresponse += "{} ".format(name)
             logresponse += myparams
             logresponse = logresponse.replace('2 deg','+2 deg')
@@ -204,11 +211,12 @@ class WiserHeatingSkill(MycroftSkill):
         my_room = message.data["wiserroom"].lower()
         logresponse = ""
         try:
-            wiserrooms = self.wh.getRooms()
-        except AttributeError:
-            self.speak_dialog('heating.wiser.lostcomms')
+            self.wh.refreshData()
+        except ValueError as e:
+            LOGGER.error(e)
             self._setup()			
         else:
+            wiserrooms = self.wh.getRooms()
             my_room = self.match_room(my_room, wiserrooms) # get the nearest matching room
             for room in wiserrooms:
                 name = room.get("Name").lower()
