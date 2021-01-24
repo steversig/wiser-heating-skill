@@ -187,8 +187,7 @@ class WiserHeatingSkill(MycroftSkill):
                         settemp = mytemp
                     #LOGGER.info("boost: id:{} {} {}".format(roomId,settemp,mytime))
                     try:
-                        #self.wh.setRoomMode(roomId,"boost",settemp,mytime)
-                        pass
+                        self.wh.setRoomMode(roomId,"boost",settemp,mytime)
                     except ValueError as e:
                         LOGGER.error("boost: {}".format(e))
                     except AttributeError:
