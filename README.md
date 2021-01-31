@@ -32,7 +32,7 @@ Controls the heating via Mycroft AI, the wiserheatingapi library by Asantaga and
 * "hey Mycroft lounge temp|temperature"
 * "hey Mycroft house temp|temperature"
 * "hey Mycroft heat lounge to 21"
-* "hey Mycroft lounge heat 21"
+* "hey Mycroft lounge heat to 21"
 * "hey Mycroft advance heat|heating lounge"
 * "hey Mycroft advance heat|heating house"
 * "hey Mycroft reset heat|heating lounge"
