@@ -12,10 +12,7 @@ import os.path
 
 __author__ = 'steversig'
 LOGGER = getLogger(__name__)
-
-# Timeout time for Wiser requests
-TIMEOUT = 10
-
+housename = "house"
 
 class WiserHeatingSkill(MycroftSkill):
     def __init__(self):
@@ -50,7 +47,7 @@ class WiserHeatingSkill(MycroftSkill):
         if self.settings.get('wiserhousename') is not None:
             self.my_house = self.settings.get('wiserhousename')
         else:
-            self.my_house = "house"
+            self.my_house = housename
         # connect to the wiser hub
         try:
             try:
@@ -212,6 +209,12 @@ class WiserHeatingSkill(MycroftSkill):
         try:
             self.wh.refreshData()
         except ValueError as e:
+            LOGGER.error(e)
+            self._setup()			
+        except AttributeError as e:
+            LOGGER.error(e)
+            self._setup()			
+        except ChunkedEncodingError as e:
             LOGGER.error(e)
             self._setup()			
         else:

@@ -1,4 +1,4 @@
-{wiserroom} (Boost|heat|heating) (|to {wisertemp}) (|for {wisertime})
-{wiserroom} (Boost|heat|heating) (|for {wisertime}) (|to {wisertemp}) 
-(Boost|heat|heating) {wiserroom} (|to {wisertemp}) (|for {wisertime})
-(Boost|heat|heating) {wiserroom} (|for {wisertime}) (|to {wisertemp})
+{wiserroom} (Boost|Boost heat|Boost heating) (|to {wisertemp}) (|for {wisertime})
+{wiserroom} (Boost|Boost heat|Boost heating) (|for {wisertime}) (|to {wisertemp}) 
+(Boost heat|Boost heating|Boost) {wiserroom} (|to {wisertemp}) (|for {wisertime})
+(Boost heat|Boost heating|Boost) {wiserroom} (|for {wisertime}) (|to {wisertemp})
