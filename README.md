@@ -1,9 +1,11 @@
 # <img src="https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/thermometer-half.svg" card_color="#D81159" width="50" height="50" style="vertical-align:bottom"/> Wiser Heating
 Controls the heating
 
-Work In Progress - first go at a Mycroft skill
+First go at a Mycroft skill. Functions work OK and take effect on Heat Hub. Continuing work to improve reliability and accuracy
 
-Uses Padatious intents, so commands need to include all settings in one go
+Uses Padatious intents, so commands need to include all settings in one command. 
+
+It has a set of Voight Kampff tests which it passes.
 
 So far uses wiserheatingapi API calls
 * room.get("CalculatedTemperature")
