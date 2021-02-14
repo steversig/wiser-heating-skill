@@ -1,6 +1,7 @@
 {
 	"skillMetadata:" {
 		"sections": [
+			{
 			"name": "Wiser Hub Details",
 			"fields": [
 				{
@@ -30,6 +31,7 @@
 				"value": "house"
 				}
 			]
+			}
 		]
 	}
 }
